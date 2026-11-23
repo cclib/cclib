@@ -54,3 +54,28 @@ class PyscfTest:
         assert np.allclose(mo_coeff[0][0][0], self.udata.mocoeffs[0][0][0])
         # check a random middle MO coefficient
         assert np.allclose(mo_coeff[0][0][10], self.udata.mocoeffs[0][10][0])
+
+    def test_makecclib_custom_basis(self) -> None:
+        """makecclib must not fail on embedded (non-string) basis sets.
+
+        Regression test for https://github.com/cclib/cclib/issues/1851.
+        """
+        from pyscf import dft, gto
+
+        mol = gto.M(
+            atom="H 0 0 0; H 0 0 0.74",
+            basis={
+                "H": gto.parse(
+                    """
+            H    S
+                  0.3425250914E+01       0.1543289673E+00
+                  0.6239137298E+00       0.5353281423E+00
+                  0.1688554040E+00       0.4446345422E+00"""
+                )
+            },
+        )
+        mf = dft.RKS(mol)
+        mf.xc = "b3lyp"
+        mf.kernel()
+        data = cclib2pyscf.makecclib(mf)
+        assert data.metadata["basis_set"] == "custom"
