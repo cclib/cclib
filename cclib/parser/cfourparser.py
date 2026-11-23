@@ -5,7 +5,9 @@
 
 """Parser for CFOUR output files"""
 
+import re
 from collections import defaultdict
+from dataclasses import dataclass
 from datetime import timedelta
 from typing import TYPE_CHECKING
 
@@ -840,3 +842,85 @@ class CFOUR(logfileparser.Logfile):
             self.mpenergies[-1].append(float(tokens[2]))
         if "Total MBPT(4)       energy:" in line:
             self.mpenergies[-1].append(float(tokens[3]))
+
+
+ControlParameterValue = str | int | float | None
+
+
+@dataclass(frozen=True, kw_only=True, slots=True)
+class ControlParameter:
+    """A row in the "CFOUR Control Parameters" table."""
+
+    external_name: str
+    """The row's value under the "External Name" column."""
+
+    internal_name: str
+    """The row's value under the "Internal Name" column."""
+
+    value: ControlParameterValue
+    """The row's value under the "Value" column, parsed into a Python type."""
+
+    raw_value: str
+    """The row's value under the "Value" column, as-is."""
+
+    integer: int | None
+
+    units: str | None
+    """The row's value under the "Units" column, if it exists."""
+
+
+LINE_RE = re.compile(
+    r"""
+    ^\s*
+    (?P<external>\S+) \s+
+    (?P<internal>\S+) \s+
+    (?P<value>
+        \d+D-\s*\d+                 # 10D-  4, 10D-100 (has internal spaces)
+      | [^\s\[]+(?:\ [^\s\[]+)*     # tokens joined by single spaces; stops before '['
+    )
+    \s*
+    (?:\[\s*(?P<int>\d+)\])?        # optional [  0], with or without a space before it
+    (?:\s+(?P<units>\S+(?:\ \S+)*))?  # optional units: ***, x 10-6, # of cyc., ...
+    \s*$
+    """,
+    re.VERBOSE,
+)
+
+
+def _convert_control_parameter_value(raw: str) -> ControlParameterValue:
+    if set(raw) == {"*"}:  # *** (unset) or ********* (Fortran overflow)
+        return None
+    if m := re.fullmatch(r"10D-\s*(\d+)", raw):  # CFOUR's way of printing 10**-n
+        return 10.0 ** -int(m[1])
+    try:
+        return int(raw)
+    except ValueError:
+        return raw
+
+
+def parse_control_parameter_line(control_parameter_line: str) -> ControlParameter | None:
+    m = LINE_RE.match(control_parameter_line)
+    if not m:
+        return None
+    units = m["units"]
+    control_parameter = ControlParameter(
+        external_name=m["external"],
+        internal_name=m["internal"],
+        value=_convert_control_parameter_value(m["value"]),
+        raw_value=m["value"],
+        integer=int(m["int"]) if m["int"] is not None else None,
+        units=None if units is None or set(units) == {"*"} else units,
+    )
+    print(control_parameter)
+    return control_parameter
+
+
+def parse_control_parameters(inputfile: "FileWrapper") -> dict[str, ControlParameter]:
+    control_parameters = dict()
+    line = next(inputfile)
+    while set(line.strip()) != {"-"}:
+        control_parameter = parse_control_parameter_line(line)
+        if control_parameter is not None:
+            control_parameters[control_parameter.external_name] = control_parameter
+        line = next(inputfile)
+    return control_parameters
