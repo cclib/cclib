@@ -173,6 +173,14 @@ class ORCA(logfileparser.Logfile):
         if "Your calculation utilizes the basis:" == line[:36]:
             self.metadata["basis_set"] = line[37:].strip()
 
+        # The VV10-type nonlocal correction is not printed in the dispersion block
+        # below. The "NL short-range parameter" printed with the functional is
+        # present even when the correction is not used, so it cannot be relied on.
+        #
+        # Your calculation utilizes the DFT-NL dispersion correction.
+        if "Your calculation utilizes the DFT-NL dispersion correction" in line:
+            self.metadata["dispersion"] = "vv10"
+
         # ================================================================================
         #                                         WARNINGS
         #                        Please study these warnings very carefully!
@@ -618,8 +626,16 @@ Dispersion correction           -0.016199959
         if "DFT DISPERSION CORRECTION" in line:
             # A bunch of parameters are printed the first time dispersion is called
             # However, they vary wildly in form and number, making parsing problematic
+            # The model is identified by the DFTDOPT option: 2 for D2, 3 and 4 for D3
+            # with zero and Becke-Johnson damping, and 5 for D4.
+            dispersion_models = {"2": "d2", "3": "d3zero", "4": "d3bj", "5": "d4"}
             line = next(inputfile)
             while "Dispersion correction" not in line:
+                # Active option DFTDOPT                   ...         4
+                if "Active option DFTDOPT" in line:
+                    option = line.split()[-1]
+                    if option in dispersion_models:
+                        self.metadata["dispersion"] = dispersion_models[option]
                 line = next(inputfile)
             self.append_attribute("dispersionenergies", utils.float(line.split()[-1]))
 

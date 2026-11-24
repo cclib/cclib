@@ -1065,8 +1065,17 @@ class Gaussian(logfileparser.Logfile):
                     else:
                         shell_line = line
 
+        # The model is read from this line rather than from the route section, since
+        # functionals with a built-in correction (wB97XD, B97D3...) do not need the
+        # EmpiricalDispersion keyword.
+        #
+        #  R6Disp:  Grimme-D3(BJ) Dispersion energy=       -0.0333996077 Hartrees.
         if "Dispersion energy=" in line:
             self.append_attribute("dispersionenergies", float(line.split()[-2]))
+            dispersion_models = {"Grimme-D2": "d2", "Grimme-D3": "d3zero", "Grimme-D3(BJ)": "d3bj"}
+            label = line.split()[1]
+            if label in dispersion_models:
+                self.metadata["dispersion"] = dispersion_models[label]
 
         # Find the targets for SCF convergence (QM calcs).
         # Not for BOMD as targets are not available in the summary

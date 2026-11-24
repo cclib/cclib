@@ -363,10 +363,16 @@ SP        GAMESS      FireflyDispersionTest basicFirefly8.1             dvb_disp
 SP        GAMESS      GenericDispersionTest basicGAMESS-US2018          dvb_dispersion_bp86_d3zero.out
 SP        Gaussian    GenericDispersionTest basicGaussian09             dvb_dispersion_bp86_d3zero.out
 SP        Gaussian    GenericDispersionTest basicGaussian16             dvb_dispersion_bp86_d3zero.out
+SP        Gaussian    GenericD2DispersionTest basicGaussian09           dvb_dispersion_bp86_d2.out
+SP        Gaussian    GenericD3BJDispersionTest basicGaussian09         dvb_dispersion_bp86_d3bj.out
 SP        NWChem      GenericDispersionTest basicNWChem6.8              dvb_dispersion_bp86_d3zero.out
 SP        NWChem      GenericDispersionTest basicNWChem7.0              dvb_dispersion_bp86_d3zero.out
 SP        ORCA        GenericDispersionTest basicORCA5.0                dvb_dispersion_bp86_d3zero.out
 SP        ORCA        GenericDispersionTest basicORCA6.0                dvb_dispersion_bp86_d3zero.out
+SP        ORCA        GenericD2DispersionTest basicORCA6.1              dvb_dispersion_bp86_d2.out
+SP        ORCA        GenericD3BJDispersionTest basicORCA6.1            dvb_dispersion_bp86_d3bj.out
+SP        ORCA        ORCAD4DispersionTest  basicORCA6.1                dvb_dispersion_bp86_d4.out
+SP        ORCA        ORCANLDispersionTest  basicORCA6.1                dvb_dispersion_bp86_nl.out
 SP        Psi4        GenericDispersionTest basicPsi4-1.2.1             dvb_dispersion_bp86_d3zero.out
 SP        Psi4        GenericDispersionTest basicPsi4-1.3.1             dvb_dispersion_bp86_d3zero.out
 SP        Psi4        GenericDispersionTest basicPsi4-1.7               dvb_dispersion_bp86_d3zero.out
