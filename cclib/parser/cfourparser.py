@@ -23,7 +23,7 @@ if TYPE_CHECKING:
 class CFOUR(logfileparser.Logfile):
     """A CFOUR v2.1 log file."""
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(logname="CFOUR", *args, **kwargs)
 
     def normalisesym(self, label: str) -> str:
@@ -150,7 +150,7 @@ class CFOUR(logfileparser.Logfile):
                  61       0.187000   0.0000000   0.0000000   1.0000000
 """
 
-    def parse_basis(self, inputfile, line):
+    def parse_basis(self, inputfile: "FileWrapper", line: str):
         atom_index = {}
         line = next(inputfile)
         should_parse = True
