@@ -808,9 +808,11 @@ class CFOUR(logfileparser.Logfile):
             line = next(inputfile)
             tokens = line.split()
             self.append_attribute("grads", [])
-            while "Norm is" not in line:
+            while line.strip():
                 self.grads[-1].append([float(tokens[0]), float(tokens[1]), float(tokens[2])])
                 line = next(inputfile)
+                if "Norm is" in line:
+                    break
                 tokens = line.split()
         if "Total MP2 energy" in line:
             self.append_attribute("mpenergies", [])
