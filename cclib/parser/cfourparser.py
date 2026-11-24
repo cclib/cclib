@@ -336,41 +336,34 @@ class CFOUR(logfileparser.Logfile):
         if "Version" in line:
             self.metadata["package_version"] = tokens[1]
 
-        # get the name of the basis set used
-        if "BASIS                IBASIS" in line:
-            self.metadata["basis_set"] = line.split()[2]
-
-        # get calc_level
-        if "CALCLEVEL            ICLLVL" in line:
-            self.set_attribute("calc_level", tokens[2])
-
-        # get excited_states_method
-        if "EXCITE               IEXCIT" in line:
-            if not tokens[2] == "NONE":
-                self.metadata["excited_states_method"] = tokens[2] + "-" + self.calc_level
-
-        # get whether the reference is unrestricted or not
-        if "REFERENCE            IREFNC" in line:
-            if tokens[2][0] == "U":
+        # parse the control parameters
+        if line.strip() == "CFOUR Control Parameters":
+            self.skip_lines(inputfile, ["d", "external internal value units", "name name", "d"])
+            control_parameters = parse_control_parameters(inputfile)
+            self.metadata["basis_set"] = control_parameters["BASIS"].value
+            excite = str(control_parameters["EXCITE"].value)
+            if excite != "NONE":
+                self.metadata["excited_states_method"] = (
+                    excite + "-" + str(control_parameters["CALCLEVEL"].value)
+                )
+            reference = str(control_parameters["REFERENCE"].value)
+            if reference[0] == "U":
                 self.metadata["unrestricted"] = True
                 self.set_attribute("homos", np.array([0, 0]))
-            elif tokens[2] == "ROHF":
+            elif reference == "ROHF":
                 self.set_attribute("homos", np.array([0, 0]))
                 self.metadata["unrestricted"] = False
             else:
                 self.set_attribute("homos", np.array([0]))
                 self.metadata["unrestricted"] = False
-        if "SCF_CONV             ISCFCV" in line:
-            if tokens[3] == "***":
-                self.set_attribute(
-                    "scf_target_value", float(np.power(10.0, int(tokens[2].split("D")[1])))
-                )
-            else:
-                self.set_attribute(
-                    "scf_target_value", float(np.power(10.0, int(tokens[2][-1] + tokens[3])))
-                )
-        if "GEO_CONV             ICONTL" in line:
-            self.set_attribute("geotargets", [np.power(10.0, -int(tokens[2]))])
+            self.set_attribute("scf_target_value", float(control_parameters["SCF_CONV"].value))
+            self.set_attribute("geotargets", [10 ** -float(control_parameters["GEO_CONV"].value)])
+            self.set_attribute("charge", int(control_parameters["CHARGE"].value))
+            self.set_attribute(
+                "estate_prop_on", str(control_parameters["ESTATE_PROP"].value) != "OFF"
+            )
+            self.set_attribute("mult", int(control_parameters["MULTIPLICTY"].value))
+
         if ("Minimum force:" in line) and ("RMS force:" in line):
             self.append_attribute("geovalues", [float(tokens[6])])
 
@@ -388,21 +381,6 @@ class CFOUR(logfileparser.Logfile):
             self.metadata["success"] = True
             self.metadata["cpu_time"] = [timedelta(seconds=float(tokens[5][:-1]))]
             self.metadata["wall_time"] = [timedelta(seconds=float(tokens[6]))]
-
-        # get the net charge of the system
-        if "CHARGE               ICHRGE" in line:
-            self.set_attribute("charge", int(tokens[2]))
-
-        # get estate_prop state
-        if "ESTATE_PROP          IEXPRP" in line:
-            if tokens[2] == "OFF":
-                self.set_attribute("estate_prop_on", False)
-            else:
-                self.set_attribute("estate_prop_on", True)
-
-        # get the spin multiplicity of the system
-        if "MULTIPLICTY          IMULTP" in line:
-            self.set_attribute("mult", int(tokens[2]))
 
         # get coupled cluster energy
         if "A miracle has come to pass. The CC iterations have converged." in line:
