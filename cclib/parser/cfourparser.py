@@ -788,7 +788,6 @@ class CFOUR(logfileparser.Logfile):
                             tokens.remove(tokens[1])
                             tokens.insert(1, token2)
                             tokens.insert(1, token1)
-                        print(tokens)
                         for i in range(num_vibs_this_line):
                             self.vibdisps[-(i + 1)].append(
                                 [
@@ -889,7 +888,6 @@ def parse_control_parameter_line(control_parameter_line: str) -> ControlParamete
         integer=int(m["int"]) if m["int"] is not None else None,
         units=None if units is None or set(units) == {"*"} else units,
     )
-    print(control_parameter)
     return control_parameter
 
 
