@@ -349,6 +349,7 @@ A dictionary containing metadata_ (data about data) for the calculation. Current
 * ``coord_type``: For the ``coords`` field, a string for the representation of stored coordinates. Currently, it is one of ``xyz``, ``int``/``internal``, or ``gzmat``.
 * ``coords``: A list of lists with shape ``[natoms, 4]`` which contains the input coordinates (those found in the input file). The first column is the atomic symbol as a string, and the next three columns are floats. This is useful as many programs reorient coordinates for symmetry reasons.
 * ``cpu_time``: A list of datetime.timedeltas containing the CPU time of each calculation in the output.
+* ``dispersion``: A string with the dispersion correction used, as reported by the program, including corrections built into the functional. Currently, it is one of ``d2``, ``d3zero``, ``d3bj`` (D3 with zero or Becke-Johnson damping), ``d4``, or ``vv10`` (nonlocal correction). It is absent if no correction is reported.
 * ``functional``: A string with the name of the density functional used.
 * ``info``: A list of strings, each of which is an information or log message produced during a calculation.
 * ``input_file_contents``: A string containing the entire input file, if it is echoed back during the calculation.

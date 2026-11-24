@@ -841,6 +841,7 @@ class GenericDispersionTest:
     """Generic single-geometry dispersion correction unittest"""
 
     # Q-Chem 5.4
+    dispersion = "d3zero"
     dispersionenergy = -0.0147199319
     dispersionenergy_delta = 2.0e-7
 
@@ -851,12 +852,53 @@ class GenericDispersionTest:
             data.dispersionenergies[0] - utils.convertor(self.dispersionenergy, "hartree", "eV")
         ) < utils.convertor(self.dispersionenergy_delta, "hartree", "eV")
 
+    @skipForParser("DALTON", "not implemented yet")
+    @skipForParser("GAMESS", "not implemented yet")
+    @skipForParser("NWChem", "not implemented yet")
+    @skipForParser("Psi4", "not implemented yet")
+    @skipForParser("QChem", "not implemented yet")
+    def testdispersion(self, data: "ccData") -> None:
+        """Is the dispersion model parsed correctly?"""
+        assert data.metadata["dispersion"] == self.dispersion
+
 
 class FireflyDispersionTest(GenericDispersionTest):
     """Customized single-geometry dispersion correction unittest"""
 
     # Firefly 8.1
     dispersionenergy = -0.015801551434377520
+
+
+class GenericD2DispersionTest(GenericDispersionTest):
+    """Generic single-geometry D2 dispersion correction unittest"""
+
+    # Gaussian 09 D.01
+    dispersion = "d2"
+    dispersionenergy = -0.0198918830
+
+
+class GenericD3BJDispersionTest(GenericDispersionTest):
+    """Generic single-geometry D3 dispersion correction with Becke-Johnson damping unittest"""
+
+    # Gaussian 09 D.01
+    dispersion = "d3bj"
+    dispersionenergy = -0.0333996077
+
+
+class ORCAD4DispersionTest(GenericDispersionTest):
+    """Customized single-geometry D4 dispersion correction unittest"""
+
+    # ORCA 6.1
+    dispersion = "d4"
+    dispersionenergy = -0.028358642
+
+
+class ORCANLDispersionTest:
+    """Customized single-geometry nonlocal (VV10) dispersion correction unittest"""
+
+    def testdispersion(self, data: "ccData") -> None:
+        """Is the dispersion model parsed correctly?"""
+        assert data.metadata["dispersion"] == "vv10"
 
 
 class SolventMetadataTest:
