@@ -816,7 +816,7 @@ class CFOUR(logfileparser.Logfile):
                 if "Norm is" in line:
                     break
                 tokens = line.split()
-        if "Total MP2 energy" in line:
+        if "Total MP2 energy        =" in line:
             self.append_attribute("mpenergies", [])
             self.mpenergies[-1].append(float(tokens[4]))
         if "D-MBPT(3)" in line:
