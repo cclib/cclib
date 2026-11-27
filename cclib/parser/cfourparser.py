@@ -761,7 +761,7 @@ class CFOUR(logfileparser.Logfile):
             tokens = line.split()
             while "----------------------------------------------------------------" not in line:
                 if "VIBRATION" in line:
-                    self.append_attribute("vibfreqs", float(tokens[1]))
+                    self.append_attribute("vibfreqs", utils.parse_vibfreq(tokens[1]))
                     self.append_attribute("vibirs", float(tokens[2]))
                     self.append_attribute("vibsyms", self.normalisesym(tokens[0]))
                 line = next(inputfile)
