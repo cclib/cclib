@@ -458,11 +458,13 @@ class CFOUR(logfileparser.Logfile):
             temp_atomcoords = []
             while "----------------------------------------------------------------" not in line:
                 if self.first_coord_block:
-                    atomic_number = int(tokens[1])
+                    if tokens[1] != "***":
+                        atomic_number = int(tokens[1])
+                    else:
+                        atomic_number = 0
                     atomic_symbol = tokens[0]
-                    if atomic_number > 0:
-                        atomnos.append(atomic_number)
-                        atomic_symbols.append(atomic_symbol)
+                    atomnos.append(atomic_number)
+                    atomic_symbols.append(atomic_symbol)
                 temp_atomcoords.append(
                     [
                         utils.convertor(float(tokens[2]), "bohr", "Angstrom"),
