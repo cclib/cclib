@@ -339,14 +339,14 @@ class CFOUR(logfileparser.Logfile):
         # parse the control parameters
         if line.strip() == "CFOUR Control Parameters":
             self.skip_lines(inputfile, ["d", "external internal value units", "name name", "d"])
-            control_parameters = parse_control_parameters(inputfile)
-            self.metadata["basis_set"] = control_parameters["BASIS"].value
-            excite = str(control_parameters["EXCITE"].value)
+            self.control_parameters = parse_control_parameters(inputfile)
+            self.metadata["basis_set"] = self.control_parameters["BASIS"].value
+            excite = str(self.control_parameters["EXCITE"].value)
             if excite != "NONE":
                 self.metadata["excited_states_method"] = (
-                    excite + "-" + str(control_parameters["CALCLEVEL"].value)
+                    excite + "-" + str(self.control_parameters["CALCLEVEL"].value)
                 )
-            reference = str(control_parameters["REFERENCE"].value)
+            reference = str(self.control_parameters["REFERENCE"].value)
             if reference[0] == "U":
                 self.metadata["unrestricted"] = True
                 self.set_attribute("homos", np.array([0, 0]))
@@ -356,13 +356,15 @@ class CFOUR(logfileparser.Logfile):
             else:
                 self.set_attribute("homos", np.array([0]))
                 self.metadata["unrestricted"] = False
-            self.set_attribute("scf_target_value", float(control_parameters["SCF_CONV"].value))
-            self.set_attribute("geotargets", [10 ** -float(control_parameters["GEO_CONV"].value)])
-            self.set_attribute("charge", int(control_parameters["CHARGE"].value))
+            self.set_attribute("scf_target_value", float(self.control_parameters["SCF_CONV"].value))
             self.set_attribute(
-                "estate_prop_on", str(control_parameters["ESTATE_PROP"].value) != "OFF"
+                "geotargets", [10 ** -float(self.control_parameters["GEO_CONV"].value)]
             )
-            self.set_attribute("mult", int(control_parameters["MULTIPLICTY"].value))
+            self.set_attribute("charge", int(self.control_parameters["CHARGE"].value))
+            self.set_attribute(
+                "estate_prop_on", str(self.control_parameters["ESTATE_PROP"].value) != "OFF"
+            )
+            self.set_attribute("mult", int(self.control_parameters["MULTIPLICTY"].value))
 
         if ("Minimum force:" in line) and ("RMS force:" in line):
             self.append_attribute("geovalues", [float(tokens[6])])
