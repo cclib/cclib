@@ -398,13 +398,19 @@ class Logfile(ABC):
         This function will read len(sequence) lines and do certain checks on them,
         when the elements of sequence have the appropriate values. Currently the
         following elements trigger checks:
-            'blank' or 'b'      - the line should be blank
-            'dashes' or 'd'     - the line should contain only dashes (or spaces)
-            'equals' or 'e'     - the line should contain only equal signs (or spaces)
-            'stars' or 's'      - the line should contain only stars (or spaces)
+            'blank' or 'b'       - the line should be blank
+            'dashes' or 'd'      - the line should contain only dashes (or spaces)
+            'equals' or 'e'      - the line should contain only equal signs (or spaces)
+            'stars' or 's'       - the line should contain only stars (or spaces)
+            'underscores' or 'u' - the line should contain only underscores (or spaces)
         """
 
-        expected_characters = {"-": ["dashes", "d"], "=": ["equals", "e"], "*": ["stars", "s"]}
+        expected_characters = {
+            "-": ["dashes", "d"],
+            "=": ["equals", "e"],
+            "*": ["stars", "s"],
+            "_": ["underscores", "u"],
+        }
 
         lines = []
         for expected in sequence:
