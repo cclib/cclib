@@ -9,6 +9,7 @@ import re
 from collections import defaultdict
 from dataclasses import dataclass
 from datetime import timedelta
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 from cclib.parser import logfileparser, utils
@@ -242,6 +243,11 @@ class CFOUR(logfileparser.Logfile):
         return gbasis
 
     def before_parsing(self) -> None:
+        # Keep track of which part of the output we are in, with changes
+        # triggered by looking at the binary (file) name appearing after
+        # "--invoking executable--".
+        self.executable = None
+
         # geting atomic number and symbol is different for 1 atom
         self.set_attribute("only_one_atom", False)
 
@@ -331,6 +337,22 @@ class CFOUR(logfileparser.Logfile):
 
     def extract(self, inputfile: "FileWrapper", line: str) -> None:
         tokens = line.split()
+
+        # This will automatically change the executable attribute which helps
+        # identify which section of an output we're in.
+        if line.strip() == "--invoking executable--":
+            line = next(inputfile)
+            self.executable = Path(line.strip()).name
+
+        if line.strip().startswith("--executable"):
+            leaving_executable = tokens[1]
+            if leaving_executable != self.executable:
+                if leaving_executable != "xjoda" and self.executable != "set_genbas":
+                    self.logger.info(
+                        "Unhandled mismatch in leaving executable %s and last seen entering executable %s",
+                        leaving_executable,
+                        self.executable,
+                    )
 
         # get the version of CFOUR
         if "Version" in line:
