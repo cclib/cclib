@@ -993,7 +993,7 @@ class Psi4(logfileparser.Logfile):
             while "---" not in line:
                 chomp = line.split()
                 vibsym = chomp[0]
-                vibfreq = Psi4.parse_vibfreq(chomp[1])
+                vibfreq = utils.parse_vibfreq(chomp[1])
                 vibsyms.append(vibsym)
                 vibfreqs.append(vibfreq)
                 line = next(inputfile)
@@ -1029,7 +1029,7 @@ class Psi4(logfileparser.Logfile):
             # C      0.000   0.000   0.050      12.000000
             # C      0.000   0.000   0.050      12.000000
             for vibfreq in self.vibfreqs:
-                _vibfreq = Psi4.parse_vibfreq(line[13:].strip())
+                _vibfreq = utils.parse_vibfreq(line[13:].strip())
                 assert abs(vibfreq - _vibfreq) < 1.0e-2
                 line = next(inputfile)
                 assert "Force constant:" in line
@@ -1317,7 +1317,7 @@ class Psi4(logfileparser.Logfile):
         line = next(inputfile)
         assert "Freq" in line
         chomp = line.split()
-        vibfreqs = [Psi4.parse_vibfreq(x) for x in chomp[-n:]]
+        vibfreqs = [utils.parse_vibfreq(x) for x in chomp[-n:]]
 
         line = next(inputfile)
         assert "Irrep" in line
@@ -1365,14 +1365,3 @@ class Psi4(logfileparser.Logfile):
             line = next(inputfile)
 
         return vibfreqs, vibsyms, vibdisps, vibrmasses, vibfconsts, vibirs
-
-    @staticmethod
-    def parse_vibfreq(vibfreq: str) -> float:
-        """Imaginary frequencies are printed as '12.34i', rather than
-        '-12.34'.
-        """
-        is_imag = vibfreq[-1] == "i"
-        if is_imag:
-            return -float(vibfreq[:-1])
-        else:
-            return float(vibfreq)

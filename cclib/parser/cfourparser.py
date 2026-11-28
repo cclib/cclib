@@ -5,8 +5,11 @@
 
 """Parser for CFOUR output files"""
 
+import re
 from collections import defaultdict
+from dataclasses import dataclass
 from datetime import timedelta
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 from cclib.parser import logfileparser, utils
@@ -21,7 +24,7 @@ if TYPE_CHECKING:
 class CFOUR(logfileparser.Logfile):
     """A CFOUR v2.1 log file."""
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(logname="CFOUR", *args, **kwargs)
 
     def normalisesym(self, label: str) -> str:
@@ -148,7 +151,7 @@ class CFOUR(logfileparser.Logfile):
                  61       0.187000   0.0000000   0.0000000   1.0000000
 """
 
-    def parse_basis(self, inputfile, line):
+    def parse_basis(self, inputfile: "FileWrapper", line: str):
         atom_index = {}
         line = next(inputfile)
         should_parse = True
@@ -240,6 +243,11 @@ class CFOUR(logfileparser.Logfile):
         return gbasis
 
     def before_parsing(self) -> None:
+        # Keep track of which part of the output we are in, with changes
+        # triggered by looking at the binary (file) name appearing after
+        # "--invoking executable--".
+        self.executable = None
+
         # geting atomic number and symbol is different for 1 atom
         self.set_attribute("only_one_atom", False)
 
@@ -330,45 +338,56 @@ class CFOUR(logfileparser.Logfile):
     def extract(self, inputfile: "FileWrapper", line: str) -> None:
         tokens = line.split()
 
+        # This will automatically change the executable attribute which helps
+        # identify which section of an output we're in.
+        if line.strip() == "--invoking executable--":
+            line = next(inputfile)
+            self.executable = Path(line.strip()).name
+
+        if line.strip().startswith("--executable"):
+            leaving_executable = tokens[1]
+            if leaving_executable != self.executable:
+                if leaving_executable != "xjoda" and self.executable != "set_genbas":
+                    self.logger.info(
+                        "Unhandled mismatch in leaving executable %s and last seen entering executable %s",
+                        leaving_executable,
+                        self.executable,
+                    )
+
         # get the version of CFOUR
         if "Version" in line:
             self.metadata["package_version"] = tokens[1]
 
-        # get the name of the basis set used
-        if "BASIS                IBASIS" in line:
-            self.metadata["basis_set"] = line.split()[2]
-
-        # get calc_level
-        if "CALCLEVEL            ICLLVL" in line:
-            self.set_attribute("calc_level", tokens[2])
-
-        # get excited_states_method
-        if "EXCITE               IEXCIT" in line:
-            if not tokens[2] == "NONE":
-                self.metadata["excited_states_method"] = tokens[2] + "-" + self.calc_level
-
-        # get whether the reference is unrestricted or not
-        if "REFERENCE            IREFNC" in line:
-            if tokens[2][0] == "U":
+        # parse the control parameters
+        if line.strip() == "CFOUR Control Parameters":
+            self.skip_lines(inputfile, ["d", "external internal value units", "name name", "d"])
+            self.control_parameters = parse_control_parameters(inputfile)
+            self.metadata["basis_set"] = self.control_parameters["BASIS"].value
+            excite = str(self.control_parameters["EXCITE"].value)
+            if excite != "NONE":
+                self.metadata["excited_states_method"] = (
+                    excite + "-" + str(self.control_parameters["CALCLEVEL"].value)
+                )
+            reference = str(self.control_parameters["REFERENCE"].value)
+            if reference[0] == "U":
                 self.metadata["unrestricted"] = True
                 self.set_attribute("homos", np.array([0, 0]))
-            elif tokens[2] == "ROHF":
+            elif reference == "ROHF":
                 self.set_attribute("homos", np.array([0, 0]))
                 self.metadata["unrestricted"] = False
             else:
                 self.set_attribute("homos", np.array([0]))
                 self.metadata["unrestricted"] = False
-        if "SCF_CONV             ISCFCV" in line:
-            if tokens[3] == "***":
-                self.set_attribute(
-                    "scf_target_value", float(np.power(10.0, int(tokens[2].split("D")[1])))
-                )
-            else:
-                self.set_attribute(
-                    "scf_target_value", float(np.power(10.0, int(tokens[2][-1] + tokens[3])))
-                )
-        if "GEO_CONV             ICONTL" in line:
-            self.set_attribute("geotargets", [np.power(10.0, -int(tokens[2]))])
+            self.set_attribute("scf_target_value", float(self.control_parameters["SCF_CONV"].value))
+            self.set_attribute(
+                "geotargets", [10 ** -float(self.control_parameters["GEO_CONV"].value)]
+            )
+            self.set_attribute("charge", int(self.control_parameters["CHARGE"].value))
+            self.set_attribute(
+                "estate_prop_on", str(self.control_parameters["ESTATE_PROP"].value) != "OFF"
+            )
+            self.set_attribute("mult", int(self.control_parameters["MULTIPLICTY"].value))
+
         if ("Minimum force:" in line) and ("RMS force:" in line):
             self.append_attribute("geovalues", [float(tokens[6])])
 
@@ -386,21 +405,6 @@ class CFOUR(logfileparser.Logfile):
             self.metadata["success"] = True
             self.metadata["cpu_time"] = [timedelta(seconds=float(tokens[5][:-1]))]
             self.metadata["wall_time"] = [timedelta(seconds=float(tokens[6]))]
-
-        # get the net charge of the system
-        if "CHARGE               ICHRGE" in line:
-            self.set_attribute("charge", int(tokens[2]))
-
-        # get estate_prop state
-        if "ESTATE_PROP          IEXPRP" in line:
-            if tokens[2] == "OFF":
-                self.set_attribute("estate_prop_on", False)
-            else:
-                self.set_attribute("estate_prop_on", True)
-
-        # get the spin multiplicity of the system
-        if "MULTIPLICTY          IMULTP" in line:
-            self.set_attribute("mult", int(tokens[2]))
 
         # get coupled cluster energy
         if "A miracle has come to pass. The CC iterations have converged." in line:
@@ -476,11 +480,13 @@ class CFOUR(logfileparser.Logfile):
             temp_atomcoords = []
             while "----------------------------------------------------------------" not in line:
                 if self.first_coord_block:
-                    atomic_number = int(tokens[1])
+                    if tokens[1] != "***":
+                        atomic_number = int(tokens[1])
+                    else:
+                        atomic_number = 0
                     atomic_symbol = tokens[0]
-                    if atomic_number > 0:
-                        atomnos.append(atomic_number)
-                        atomic_symbols.append(atomic_symbol)
+                    atomnos.append(atomic_number)
+                    atomic_symbols.append(atomic_symbol)
                 temp_atomcoords.append(
                     [
                         utils.convertor(float(tokens[2]), "bohr", "Angstrom"),
@@ -781,7 +787,7 @@ class CFOUR(logfileparser.Logfile):
             tokens = line.split()
             while "----------------------------------------------------------------" not in line:
                 if "VIBRATION" in line:
-                    self.append_attribute("vibfreqs", float(tokens[1]))
+                    self.append_attribute("vibfreqs", utils.parse_vibfreq(tokens[1]))
                     self.append_attribute("vibirs", float(tokens[2]))
                     self.append_attribute("vibsyms", self.normalisesym(tokens[0]))
                 line = next(inputfile)
@@ -808,7 +814,6 @@ class CFOUR(logfileparser.Logfile):
                             tokens.remove(tokens[1])
                             tokens.insert(1, token2)
                             tokens.insert(1, token1)
-                        print(tokens)
                         for i in range(num_vibs_this_line):
                             self.vibdisps[-(i + 1)].append(
                                 [
@@ -829,14 +834,97 @@ class CFOUR(logfileparser.Logfile):
             line = next(inputfile)
             tokens = line.split()
             self.append_attribute("grads", [])
-            while "Norm is" not in line:
+            while line.strip():
                 self.grads[-1].append([float(tokens[0]), float(tokens[1]), float(tokens[2])])
                 line = next(inputfile)
+                if "Norm is" in line:
+                    break
                 tokens = line.split()
-        if "Total MP2 energy" in line:
+        if "Total MP2 energy        =" in line:
             self.append_attribute("mpenergies", [])
             self.mpenergies[-1].append(float(tokens[4]))
         if "D-MBPT(3)" in line:
             self.mpenergies[-1].append(float(tokens[2]))
         if "Total MBPT(4)       energy:" in line:
             self.mpenergies[-1].append(float(tokens[3]))
+
+
+ControlParameterValue = str | int | float | None
+
+
+@dataclass(frozen=True, kw_only=True, slots=True)
+class ControlParameter:
+    """A row in the "CFOUR Control Parameters" table."""
+
+    external_name: str
+    """The row's value under the "External Name" column."""
+
+    internal_name: str
+    """The row's value under the "Internal Name" column."""
+
+    value: ControlParameterValue
+    """The row's value under the "Value" column, parsed into a Python type."""
+
+    raw_value: str
+    """The row's value under the "Value" column, as-is."""
+
+    integer: int | None
+
+    units: str | None
+    """The row's value under the "Units" column, if it exists."""
+
+
+LINE_RE = re.compile(
+    r"""
+    ^\s*
+    (?P<external>\S+) \s+
+    (?P<internal>\S+) \s+
+    (?P<value>
+        \d+D-\s*\d+                 # 10D-  4, 10D-100 (has internal spaces)
+      | [^\s\[]+(?:\ [^\s\[]+)*     # tokens joined by single spaces; stops before '['
+    )
+    \s*
+    (?:\[\s*(?P<int>\d+)\])?        # optional [  0], with or without a space before it
+    (?:\s+(?P<units>\S+(?:\ \S+)*))?  # optional units: ***, x 10-6, # of cyc., ...
+    \s*$
+    """,
+    re.VERBOSE,
+)
+
+
+def _convert_control_parameter_value(raw: str) -> ControlParameterValue:
+    if set(raw) == {"*"}:  # *** (unset) or ********* (Fortran overflow)
+        return None
+    if m := re.fullmatch(r"10D-\s*(\d+)", raw):  # CFOUR's way of printing 10**-n
+        return 10.0 ** -int(m[1])
+    try:
+        return int(raw)
+    except ValueError:
+        return raw
+
+
+def parse_control_parameter_line(control_parameter_line: str) -> ControlParameter | None:
+    m = LINE_RE.match(control_parameter_line)
+    if not m:
+        return None
+    units = m["units"]
+    control_parameter = ControlParameter(
+        external_name=m["external"],
+        internal_name=m["internal"],
+        value=_convert_control_parameter_value(m["value"]),
+        raw_value=m["value"],
+        integer=int(m["int"]) if m["int"] is not None else None,
+        units=None if units is None or set(units) == {"*"} else units,
+    )
+    return control_parameter
+
+
+def parse_control_parameters(inputfile: "FileWrapper") -> dict[str, ControlParameter]:
+    control_parameters = dict()
+    line = next(inputfile)
+    while set(line.strip()) != {"-"}:
+        control_parameter = parse_control_parameter_line(line)
+        if control_parameter is not None:
+            control_parameters[control_parameter.external_name] = control_parameter
+        line = next(inputfile)
+    return control_parameters

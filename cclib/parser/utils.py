@@ -256,6 +256,17 @@ def block_to_matrix(block: numpy.ndarray) -> numpy.ndarray:
     return symmetrize(mat)
 
 
+def parse_vibfreq(vibfreq: str) -> float:
+    """Imaginary frequencies are printed as '12.34i', rather than
+    '-12.34'.
+    """
+    is_imag = vibfreq[-1] == "i"
+    if is_imag:
+        return -float(vibfreq[:-1])
+    else:
+        return float(vibfreq)
+
+
 _BUILTIN_FLOAT = float
 
 
